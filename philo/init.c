@@ -55,4 +55,7 @@ void	init_philo(t_philo *phi, t_data *data)
 		phi[i].data = data;
 		i++;
 	}
+	phi[i].t_die = 0;
+	phi[i].n_eaten = 0;
+	phi[i].data = data;
 }

@@ -24,14 +24,13 @@ int	main(int argc, char **argv)
 		return (printf("Error: memory allocation failed\n"), 2);
 	if (!init_data(data, argv, argc))
 		return (3);
-	phi = malloc(sizeof(t_philo) * data->n_philo);
+	phi = malloc(sizeof(t_philo) * (data->n_philo + 1));
 	if (!phi)
 		return (printf("Error: memory allocation failed\n"), 4);
 	init_philo(phi, data);
 	if (data->n_philo == 1)
 	{
-		if (!one_philo(data, phi))
-			return (5);
+		one_philo(data, phi);
 		return (0);
 	}
 	if (!th_create(phi))
@@ -40,14 +39,11 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
-int	one_philo(t_data *data, t_philo *phi)
+void	one_philo(t_data *data, t_philo *phi)
 {
-	if (pthread_mutex_init(&data->print, NULL))
-		return (printf("Error: failed to init mutex\n"), 0);
 	data->time = get_time();
 	state_print(phi, 1, GREEN, FORK);
 	time_sim(data->t_die);
 	state_print(phi, 1, RED, DIED);
 	free_all(data, phi);
-	return (1);
 }

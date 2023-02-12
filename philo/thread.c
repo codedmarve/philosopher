@@ -22,19 +22,13 @@ void	*routine2(void *args)
 	if (phi[i].data->n_eat > 0)
 	{
 		while (phi[i].data->n_eat > phi[i].n_eaten && !phi[i].data->philo_died)
-		{
 			if (is_dead(phi, &i))
 				break ;
-		}
 	}
 	else
-	{
 		while (!phi[i].data->philo_died)
-		{
 			if (is_dead(phi, &i))
 				break ;
-		}
-	}
 	return (NULL);
 }
 
@@ -63,13 +57,9 @@ void	*routine(void *arg)
 			simulation(phi);
 	}
 	else
-	{
 		while (!phi->data->philo_died)
-		{
 			if (!simulation(phi))
 				break ;
-		}
-	}
 	return (NULL);
 }
 
@@ -80,14 +70,13 @@ int	th_create(t_philo *phi)
 	i = 0;
 	if (pthread_create(&phi[0].data->monitor, NULL, routine2, phi))
 		return (printf("Error: failed to create thread\n"), 0);
-	usleep(1000);
 	phi->data->time = get_time();
 	while (i < phi->data->n_philo)
 	{
 		if (pthread_create(&phi[i].th, NULL, routine, &phi[i]))
 			return (printf("Error: failed to create thread\n"), 0);
 		i++;
-		usleep(1000);
+		usleep(100);
 	}
 	i = -1;
 	while (++i < phi->data->n_philo)

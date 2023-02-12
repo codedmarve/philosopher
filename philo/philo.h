@@ -34,7 +34,7 @@
 # define SLEEP "is sleeping"
 # define THINK "is thinking"
 # define FORK "has taken a fork"
-# define DIED "died ☠️"
+# define DIED "died"
 
 typedef struct s_data
 {
@@ -80,7 +80,7 @@ int			philo_think(t_philo *phi);
 void		*routine2(void *args);
 int			is_dead(t_philo *phi, int *i);
 long long	get_time(void);
-int			one_philo(t_data *data, t_philo *phi);
+void		one_philo(t_data *data, t_philo *phi);
 void		free_all(t_data *data, t_philo *phi);
 
 #endif

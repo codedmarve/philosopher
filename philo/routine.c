@@ -60,7 +60,7 @@ int	is_dead(t_philo *phi, int *i)
 		phi[*i].data->philo_died = 1;
 		return (1);
 	}
-	i++;
+	*i = *i + 1;
 	usleep(100);
 	return (0);
 }
