@@ -15,20 +15,12 @@
 void	*routine2(void *args)
 {
 	t_philo	*phi;
-	int		i;
 
 	phi = args;
-	i = 0;
-	if (phi[i].data->n_eat > 0)
-	{
-		while (phi[i].data->n_eat > phi[i].n_eaten && !phi[i].data->philo_died)
-			if (is_dead(phi, &i))
-				break ;
-	}
+	if (phi->data->n_eat > 0)
+		routine2_helper1(phi);
 	else
-		while (!phi[i].data->philo_died)
-			if (is_dead(phi, &i))
-				break ;
+		routine2_helper2(phi);
 	return (NULL);
 }
 
@@ -52,14 +44,9 @@ void	*routine(void *arg)
 
 	phi = arg;
 	if (phi->data->n_eat > 0)
-	{
-		while ((phi->data->n_eat > phi->n_eaten) && !phi->data->philo_died)
-			simulation(phi);
-	}
+		routine_helper1(phi);
 	else
-		while (!phi->data->philo_died)
-			if (!simulation(phi))
-				break ;
+		routine_helper2(phi);
 	return (NULL);
 }
 
@@ -68,15 +55,20 @@ int	th_create(t_philo *phi)
 	int	i;
 
 	i = 0;
+	if (pthread_mutex_init(&phi[i].data->shared, NULL))
+		return (printf("Error: failed to initialise mutex\n"), 0);
+	if (pthread_mutex_init(&phi[i].data->tm, NULL))
+		return (printf("Error: failed to initialise mutex\n"), 0);
 	if (pthread_create(&phi[0].data->monitor, NULL, routine2, phi))
 		return (printf("Error: failed to create thread\n"), 0);
+	usleep(1000);
 	phi->data->time = get_time();
 	while (i < phi->data->n_philo)
 	{
 		if (pthread_create(&phi[i].th, NULL, routine, &phi[i]))
 			return (printf("Error: failed to create thread\n"), 0);
 		i++;
-		usleep(100);
+		usleep(1000);
 	}
 	i = -1;
 	while (++i < phi->data->n_philo)

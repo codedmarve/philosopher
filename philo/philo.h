@@ -47,6 +47,8 @@ typedef struct s_data
 	long long		time;
 	pthread_t		monitor;
 	pthread_mutex_t	*mymutex;
+	pthread_mutex_t	shared;
+	pthread_mutex_t	tm;
 	pthread_mutex_t	print;
 }		t_data;
 
@@ -74,7 +76,7 @@ void		init_philo(t_philo *phi, t_data *data);
 int			state_print(t_philo *phi, int id, char *color, char *status);
 long long	time_diff(long long time);
 void		time_sim(long long time);
-int			drop_forks(t_philo *phi);
+void		drop_forks(t_philo *phi, int flag);
 int			philo_sleep(t_philo *phi);
 int			philo_think(t_philo *phi);
 void		*routine2(void *args);
@@ -82,5 +84,9 @@ int			is_dead(t_philo *phi, int *i);
 long long	get_time(void);
 void		one_philo(t_data *data, t_philo *phi);
 void		free_all(t_data *data, t_philo *phi);
+void		routine2_helper1(t_philo *phi);
+void		routine2_helper2(t_philo *phi);
+void		routine_helper1(t_philo *phi);
+void		routine_helper2(t_philo *phi);
 
 #endif

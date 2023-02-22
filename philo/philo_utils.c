@@ -16,17 +16,18 @@ int	state_print(t_philo *phi, int id, char *color, char *status)
 {
 	long long	now;
 
-	now = time_diff(phi->data->time);
-	if (phi->data->philo_died)
-		return (0);
 	pthread_mutex_lock(&phi->data->print);
+	now = time_diff(phi->data->time);
+	pthread_mutex_lock(&phi->data->shared);
 	if (phi->data->philo_died)
 	{
+		pthread_mutex_unlock(&phi->data->shared);
 		pthread_mutex_unlock(&phi->data->print);
 		return (0);
 	}
 	else
 		printf("%s%-10lld %-3d %-30s%s\n", color, now, id, status, RESET);
+	pthread_mutex_unlock(&phi->data->shared);
 	pthread_mutex_unlock(&phi->data->print);
 	return (1);
 }
@@ -59,6 +60,7 @@ void	free_all(t_data *data, t_philo *phi)
 	while (++i < data->n_philo)
 		pthread_mutex_destroy(data->mymutex + i);
 	pthread_mutex_destroy(&data->print);
+	pthread_mutex_destroy(&data->shared);
 	free(data->mymutex);
 	free(data);
 	free(phi);

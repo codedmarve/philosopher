@@ -52,10 +52,22 @@ void	init_philo(t_philo *phi, t_data *data)
 		phi[i].t_die = 0;
 		phi[i].lfork = i;
 		phi[i].rfork = (i + 1) % data->n_philo;
+		if (i % 2)
+		{
+			phi[i].rfork = i;
+			phi[i].lfork = (i + 1) % data->n_philo;
+		}
 		phi[i].data = data;
 		i++;
 	}
 	phi[i].t_die = 0;
 	phi[i].n_eaten = 0;
 	phi[i].data = data;
+}
+
+void	drop_forks(t_philo *phi, int flag)
+{
+	pthread_mutex_unlock(&phi->data->mymutex[phi->lfork]);
+	if (flag == 2)
+		pthread_mutex_unlock(&phi->data->mymutex[phi->rfork]);
 }

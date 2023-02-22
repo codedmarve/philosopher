@@ -14,21 +14,22 @@
 
 int	philo_eat(t_philo *phi)
 {
-	if (pthread_mutex_lock(&phi->data->mymutex[phi->lfork]))
-		return (0);
+	pthread_mutex_lock(&phi->data->mymutex[phi->lfork]);
 	if (!state_print(phi, phi->id + 1, GREEN, FORK))
-		return (0);
-	if (pthread_mutex_lock(&phi->data->mymutex[phi->rfork]))
-		return (0);
+		return (drop_forks(phi, 1), 0);
+	pthread_mutex_lock(&phi->data->mymutex[phi->rfork]);
 	if (!state_print(phi, phi->id + 1, GREEN, FORK))
-		return (0);
+		return (drop_forks(phi, 2), 0);
 	if (!state_print(phi, phi->id + 1, PURPLE, EAT))
-		return (0);
+		return (drop_forks(phi, 2), 0);
+	pthread_mutex_lock(&phi->data->tm);
 	phi->t_die = get_time();
+	pthread_mutex_unlock(&phi->data->tm);
 	time_sim(phi->data->t_eat);
-	pthread_mutex_unlock(&phi->data->mymutex[phi->lfork]);
-	pthread_mutex_unlock(&phi->data->mymutex[phi->rfork]);
+	drop_forks(phi, 2);
+	pthread_mutex_lock(&phi->data->shared);
 	phi->n_eaten++;
+	pthread_mutex_unlock(&phi->data->shared);
 	return (1);
 }
 
@@ -53,14 +54,19 @@ int	is_dead(t_philo *phi, int *i)
 
 	if (*i == phi[*i].data->n_philo)
 		*i = 0;
+	pthread_mutex_lock(&phi->data->tm);
 	time = time_diff(phi[*i].t_die);
 	if (time > phi[*i].data->t_die)
 	{
+		pthread_mutex_unlock(&phi->data->tm);
 		state_print(&phi[*i], phi[*i].id + 1, RED, DIED);
+		pthread_mutex_lock(&phi->data->shared);
 		phi[*i].data->philo_died = 1;
+		pthread_mutex_unlock(&phi->data->shared);
 		return (1);
 	}
+	pthread_mutex_unlock(&phi->data->tm);
 	*i = *i + 1;
-	usleep(100);
+	usleep(200);
 	return (0);
 }

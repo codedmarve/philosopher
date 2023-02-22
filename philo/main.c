@@ -34,7 +34,7 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	if (!th_create(phi))
-		return (6);
+		return (free_all(data, phi), 6);
 	free_all(data, phi);
 	return (0);
 }
