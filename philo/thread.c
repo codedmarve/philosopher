@@ -61,14 +61,14 @@ int	th_create(t_philo *phi)
 		return (printf("Error: failed to initialise mutex\n"), 0);
 	if (pthread_create(&phi[0].data->monitor, NULL, routine2, phi))
 		return (printf("Error: failed to create thread\n"), 0);
-	usleep(1000);
+	usleep(2000);
 	phi->data->time = get_time();
 	while (i < phi->data->n_philo)
 	{
 		if (pthread_create(&phi[i].th, NULL, routine, &phi[i]))
 			return (printf("Error: failed to create thread\n"), 0);
 		i++;
-		usleep(1000);
+		usleep(2000);
 	}
 	i = -1;
 	while (++i < phi->data->n_philo)

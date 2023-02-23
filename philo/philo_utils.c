@@ -16,8 +16,8 @@ int	state_print(t_philo *phi, int id, char *color, char *status)
 {
 	long long	now;
 
-	pthread_mutex_lock(&phi->data->print);
 	now = time_diff(phi->data->time);
+	pthread_mutex_lock(&phi->data->print);
 	pthread_mutex_lock(&phi->data->shared);
 	if (phi->data->philo_died)
 	{
@@ -61,6 +61,7 @@ void	free_all(t_data *data, t_philo *phi)
 		pthread_mutex_destroy(data->mymutex + i);
 	pthread_mutex_destroy(&data->print);
 	pthread_mutex_destroy(&data->shared);
+	pthread_mutex_destroy(&data->tm);
 	free(data->mymutex);
 	free(data);
 	free(phi);

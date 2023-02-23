@@ -53,7 +53,10 @@ int	is_dead(t_philo *phi, int *i)
 	int	time;
 
 	if (*i == phi[*i].data->n_philo)
+	{
 		*i = 0;
+		usleep(200);
+	}
 	pthread_mutex_lock(&phi->data->tm);
 	time = time_diff(phi[*i].t_die);
 	if (time > phi[*i].data->t_die)
@@ -67,6 +70,5 @@ int	is_dead(t_philo *phi, int *i)
 	}
 	pthread_mutex_unlock(&phi->data->tm);
 	*i = *i + 1;
-	usleep(200);
 	return (0);
 }
